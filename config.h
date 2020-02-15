@@ -1,0 +1,12 @@
+const char* ssid = "";
+const char* password = "";
+const char* mqtt_server = "";
+const char* mqtt_user = "";
+const char* mqtt_pass = "";
+const char* mqtt_client = "";
+const char* mqtt_topic_temp = "";
+const char* mqtt_topic_relay = "";
+const char* mqtt_temp_title1 = "";
+const char* mqtt_temp_key1 = "";
+const char* mqtt_temp_title2 = "";
+const char* mqtt_temp_key2 = "";
