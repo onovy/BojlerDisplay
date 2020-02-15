@@ -10,3 +10,4 @@ const char* mqtt_temp_title1 = "";
 const char* mqtt_temp_key1 = "";
 const char* mqtt_temp_title2 = "";
 const char* mqtt_temp_key2 = "";
+const int led_backlight = 70;

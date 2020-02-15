@@ -71,10 +71,11 @@ void setup() {
   tft.setRotation(3);
   tft.setTextDatum(TL_DATUM);
 
-  if (TFT_BL > 0) { // TFT_BL has been set in the TFT_eSPI library in the User Setup file TTGO_T_Display.h
-    pinMode(TFT_BL, OUTPUT); // Set backlight pin to output mode
-    digitalWrite(TFT_BL, TFT_BACKLIGHT_ON); // Turn backlight on. TFT_BACKLIGHT_ON has been set in the TFT_eSPI library in the User Setup file TTGO_T_Display.h
-  }
+  pinMode(TFT_BL, OUTPUT); // Set backlight pin to output mode
+  digitalWrite(TFT_BL, TFT_BACKLIGHT_ON); // Turn backlight on. TFT_BACKLIGHT_ON has been set in the TFT_eSPI library in the User Setup file TTGO_T_Display.h
+  ledcSetup(0, 5000, 8);
+  ledcAttachPin(TFT_BL, 0);
+  ledcWrite(0, led_backlight);
 
   tft.setSwapBytes(true);
   tft.fillScreen(TFT_BLACK);
