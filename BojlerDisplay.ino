@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
+#include <math.h>
 
 #include "config.h"
 
@@ -103,14 +104,21 @@ void callback(char* topic, byte* payload, unsigned int length) {
     DeserializationError error = deserializeJson(doc, msg);
 
     if (error) {
-      temp1 = -1;
-      temp2 = -1;
+      temp1 = NAN;
+      temp2 = NAN;
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
     } else {
-      temp1 = doc[mqtt_temp_key1].as<double>();
-      temp2 = doc[mqtt_temp_key2].as<double>();
-
+      if (doc.containsKey(mqtt_temp_key1)) {
+        temp1 = doc[mqtt_temp_key1].as<double>();
+      } else {
+        temp1 = NAN;
+      }
+      if (doc.containsKey(mqtt_temp_key2)) {
+        temp2 = doc[mqtt_temp_key2].as<double>();
+      } else {
+        temp2 = NAN;
+      }
       last_update = esp_timer_get_time();
     }
   } else if (strcmp(mqtt_topic_relay, topic) == 0) {
@@ -133,7 +141,11 @@ void draw() {
   tft.setCursor(0, 62);
   tft.setTextColor(TFT_WHITE);
   tft.setFreeFont(&FreeMonoBold12pt7b);
-  tft.print(temp1);
+  if (isnan(temp1)) {
+    tft.print("?");
+  } else {
+    tft.print(temp1);
+  }
   tft.println(" C");
 
   tft.setCursor(0, 95);
@@ -144,7 +156,11 @@ void draw() {
   tft.setCursor(0, 133);
   tft.setTextColor(TFT_WHITE);
   tft.setFreeFont(&FreeMonoBold12pt7b);
-  tft.print(temp2);
+  if (isnan(temp2)) {
+    tft.print("?");
+  } else {
+    tft.print(temp2);
+  }
   tft.println(" C");
 }
 
