@@ -3,6 +3,7 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <math.h>
+#include <ArduinoOTA.h>
 
 #include "config.h"
 
@@ -82,6 +83,40 @@ void setup() {
   tft.fillScreen(TFT_BLACK);
 
   setup_wifi();
+
+  ArduinoOTA
+    .onStart([]() {
+      tft.fillScreen(TFT_BLACK);
+      tft.setTextFont(1);
+      tft.setTextSize(2);
+      tft.setTextColor(TFT_WHITE);
+      tft.setCursor(0, 0);
+      tft.println("OTA");
+    })
+    .onEnd([]() {
+      tft.println();
+      tft.println("End");
+      delay(1000);
+    })
+    .onProgress([](unsigned int progress, unsigned int total) {
+      char buf[64];
+      sprintf(buf, "Progress: %u %%", (progress / (total / 100)));
+      tft.cursor_x = 0;
+      tft.fillRect(0, tft.cursor_y, 240, 8 * tft.textsize, TFT_BLACK);
+      tft.print(buf);
+    })
+    .onError([](ota_error_t error) {
+      tft.println();
+      if (error == OTA_AUTH_ERROR) tft.println("ERROR: Auth Failed");
+      else if (error == OTA_BEGIN_ERROR) tft.println("ERROR: Begin Failed");
+      else if (error == OTA_CONNECT_ERROR) tft.println("ERROR: Connect Failed");
+      else if (error == OTA_RECEIVE_ERROR) tft.println("ERROR: Receive Failed");
+      else if (error == OTA_END_ERROR) tft.println("ERROR: End Failed");
+      delay(1000);
+    });
+  ArduinoOTA.setPasswordHash(ota_pass);
+  ArduinoOTA.begin();
+
   last_update = esp_timer_get_time();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
@@ -185,6 +220,7 @@ void reconnect() {
       tft.print("ERROR ");
       tft.println(client.state());
       delay(1000);
+      ArduinoOTA.handle();
     }
 
     if (c++ >= 60) {
@@ -198,6 +234,7 @@ void loop() {
     reconnect();
   }
   client.loop();
+  ArduinoOTA.handle();
 
   if ((esp_timer_get_time() - last_update) > 120 * 1000000) {
     ESP.restart();
