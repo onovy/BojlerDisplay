@@ -125,21 +125,23 @@ void draw() {
   tft.fillScreen(relay_state ? TFT_RED : TFT_BLACK);
   tft.setTextFont(0);
 
-  tft.setCursor(0, 20);
+  tft.setCursor(0, 24);
   tft.setTextColor(TFT_YELLOW);
-  tft.setFreeFont(&FreeMonoBold9pt7b);
+  tft.setFreeFont(&FreeSansBold9pt7b);
   tft.println(mqtt_temp_title1);
 
+  tft.setCursor(0, 62);
   tft.setTextColor(TFT_WHITE);
   tft.setFreeFont(&FreeMonoBold12pt7b);
   tft.print(temp1);
   tft.println(" C");
 
-  tft.setCursor(0, 85);
+  tft.setCursor(0, 95);
   tft.setTextColor(TFT_YELLOW);
-  tft.setFreeFont(&FreeMonoBold9pt7b);
+  tft.setFreeFont(&FreeSansBold9pt7b);
   tft.println(mqtt_temp_title2);
 
+  tft.setCursor(0, 133);
   tft.setTextColor(TFT_WHITE);
   tft.setFreeFont(&FreeMonoBold12pt7b);
   tft.print(temp2);
