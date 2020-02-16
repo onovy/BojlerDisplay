@@ -97,10 +97,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.print((char)payload[i]);
     msg += (char)payload[i];
   }
+  Serial.println();
 
   if (strcmp(mqtt_topic_temp, topic) == 0) {
     // Temperature
-    StaticJsonDocument<2048> doc;
+    StaticJsonDocument<JSON_OBJECT_SIZE(20) + 220> doc;
     DeserializationError error = deserializeJson(doc, msg);
 
     if (error) {
